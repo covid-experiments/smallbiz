@@ -7,7 +7,12 @@ First time setup:
 npm install -g firebase-tools
 ```
 
-To start a local website:
+To start website locally:
 ```sh
 firebase serve
+```
+
+To deploy:
+```sh
+firebase deploy
 ```
