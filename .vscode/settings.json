@@ -1,15 +1,40 @@
 {
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "python.formatting.provider": "yapf",
-    "python.pythonPath": "/Users/smilkov/covid-venv/bin/python",
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
-    "editor.detectIndentation": false,
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "[python]": {
-      "editor.formatOnSave": true
-    },
-    "editor.rulers": [80],
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/coverage/": true,
+    "**/dist/": true,
+    "**/yarn.lock": true,
+    "**/.rpt2_cache/": true,
+    "**/.yalc/**/*": true,
+    "**/.cache/**/*": true,
+    "**/bazel-bin/**/*": true,
+    "**/bazel-out/**/*": true,
+    "**/bazel-genfiles/**/*": true,
+    "**/bazel-testlogs/**/*": true,
+    "**/bazel-tfjs*/**/*": true,
+  },
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.formatting.provider": "yapf",
+  "python.pythonPath": "/Users/smilkov/covid-venv/bin/python",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.defaultFormatter": "xaver.clang-format",
+  "clang-format.style": "Google",
+  "editor.wrappingIndent": "none",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "clang-format.executable": "${workspaceRoot}/node_modules/.bin/clang-format",
+  "[python]": {
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "editor.rulers": [80],
 }
