@@ -4,19 +4,15 @@
 
 First time setup:
 ```sh
-python3 -m venv ~/smallbiz-venv
-source ~/smallbiz-venv/bin/activate
-pip install -r requirements.txt
+npm install -g firebase-tools
 ```
 
-Dev setup:
-
+To start website locally:
 ```sh
-source ~/smallbiz-venv/bin/activate
-python main.py
+firebase serve
 ```
 
 To deploy:
 ```sh
-gcloud app deploy app.yaml --project covid-experiments
+firebase deploy
 ```
