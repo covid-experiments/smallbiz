@@ -1,7 +1,6 @@
 import 'firebase/firestore';
 import * as firebase from 'firebase/app';
 
-// Initialize Cloud Firestore through Firebase
 firebase.initializeApp({
   apiKey: 'AIzaSyBXWLQIPaqbiW_qgNV_DskWKx39t8dn030',
   authDomain: 'covid-exp.firebaseapp.com',
