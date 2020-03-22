@@ -2,4 +2,12 @@
 
 ## Development
 
-TODO: Add firebase docs.
+First time setup:
+```sh
+npm install -g firebase-tools
+```
+
+To start a local website:
+```sh
+firebase serve
+```
