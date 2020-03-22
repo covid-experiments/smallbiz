@@ -20,5 +20,3 @@ To deploy:
 ```sh
 gcloud app deploy app.yaml --project covid-experiments
 ```
-
-
