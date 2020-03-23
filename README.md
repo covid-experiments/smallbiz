@@ -14,5 +14,5 @@ firebase serve
 
 To deploy:
 ```sh
-firebase deploy
+yarn deploy-web
 ```
