@@ -5,12 +5,14 @@
   "license": "Apache-2.0",
   "private": true,
   "dependencies": {
+    "@types/googlemaps": "^3.39.3",
     "firebase": "~7.12.0"
   },
   "scripts": {
     "watch": "cross-env NODE_ENV=development parcel index.html --no-hmr --open --out-dir public/",
-    "build": "cross-env NODE_ENV=production parcel build index.html --no-minify --public-url ./ --out-dir public/",
-    "lint": "tslint -p . -t verbose"
+    "build": "cross-env NODE_ENV=production parcel build index.html --public-url ./ --out-dir public/",
+    "lint": "tslint -p . -t verbose",
+    "deploy-web": "yarn build && firebase deploy --only hosting"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
