@@ -2,3 +2,12 @@
   text-overflow: ellipsis;
   width: 400px;
 }
+
+#body {
+  height: 100px;
+  width: 400px;
+}
+
+#url {
+  width: 400px;
+}
