@@ -20,7 +20,8 @@
     "noUnusedParameters": false,
     "pretty": true,
     "noFallthroughCasesInSwitch": true,
-    "allowUnreachableCode": false
+    "allowUnreachableCode": false,
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules/"

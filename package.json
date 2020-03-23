@@ -9,18 +9,20 @@
     "firebase": "~7.12.0"
   },
   "scripts": {
-    "watch": "cross-env NODE_ENV=development parcel index.html --no-hmr --open --out-dir public/",
-    "build": "cross-env NODE_ENV=production parcel build index.html --public-url ./ --out-dir public/",
+    "watch": "cross-env NODE_ENV=development parcel web/index.html --no-hmr --open --out-dir public/",
+    "build": "cross-env NODE_ENV=production parcel build web/index.html --no-minify --public-url ./ --out-dir public/",
     "lint": "tslint -p . -t verbose",
     "deploy-web": "yarn build && firebase deploy --only hosting"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
     "@babel/plugin-transform-runtime": "^7.1.0",
+    "@types/ngeohash": "~0.6.2",
     "babel-preset-env": "~1.6.1",
     "clang-format": "~1.4.0",
     "cross-env": "^5.1.6",
     "firebase-tools": "~7.15.1",
+    "ngeohash": "~0.6.3",
     "parcel-bundler": "~1.12.4",
     "tslint": "~6.1.0",
     "typescript": "^3.8.3"

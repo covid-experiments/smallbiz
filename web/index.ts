@@ -1,23 +1,19 @@
-import 'firebase/firestore';
-import * as firebase from 'firebase/app';
+import {addPost} from './db';
 
-firebase.initializeApp({
-  apiKey: 'AIzaSyBXWLQIPaqbiW_qgNV_DskWKx39t8dn030',
-  authDomain: 'covid-exp.firebaseapp.com',
-  projectId: 'covid-exp'
+document.getElementById('add').addEventListener('click', async () => {
+  await addPost(
+      {
+        bizName: 'Nikhils Business',
+        bizUrl: 'https://google.com/',
+        geoLocation: {latitude: 42.3676446, longitude: -71.1143957}
+      },
+      {
+        body: 'Test body',
+        imageUrl: 'https://google.com/image',
+        url: 'https://google.com/'
+      });
+  console.log('done');
 });
-
-const db = firebase.firestore();
-
-async function main() {
-  const querySnapshot = await db.collection('smallbiz-posts').get();
-
-  querySnapshot.forEach((doc) => {
-    console.log('id', doc.id);
-    console.log(doc.data());
-  });
-}
-main();
 
 // tslint:disable-next-line:no-any
 (window as any).initMap = () => {
