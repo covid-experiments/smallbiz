@@ -29,7 +29,6 @@ navigator.geolocation.getCurrentPosition(position => {
 });
 
 async function showPosts(userLocation: {latitude: number, longitude: number}) {
-  console.log('uloc', userLocation);
   const businessPosts = await getNearbyPosts(userLocation);
 
   postsElement.innerHTML = '';
