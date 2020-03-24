@@ -7,15 +7,39 @@ const instagramInputElement =
     document.getElementById('instagram') as HTMLInputElement;
 const consoleElement = document.getElementById('console');
 const postsElement = document.getElementById('posts');
+const latitudeElement = document.getElementById('latitude') as HTMLInputElement;
+const longitudeElement =
+    document.getElementById('longitude') as HTMLInputElement;
 
-async function main() {
-  const businessPosts =
-      await getNearbyPosts({latitude: 42.3676446, longitude: -71.1143957});
+navigator.geolocation.getCurrentPosition(position => {
+  const userLocation = {
+    latitude: position.coords.latitude,
+    longitude: position.coords.longitude
+  };
+  latitudeElement.value = userLocation.latitude.toString();
+  longitudeElement.value = userLocation.longitude.toString();
+  showPosts(userLocation);
 
+  const customLocation = () => {
+    showPosts(
+        {latitude: +latitudeElement.value, longitude: +longitudeElement.value});
+  };
+  latitudeElement.addEventListener('change', customLocation);
+  longitudeElement.addEventListener('change', customLocation);
+});
+
+async function showPosts(userLocation: {latitude: number, longitude: number}) {
+  console.log('uloc', userLocation);
+  const businessPosts = await getNearbyPosts(userLocation);
+
+  postsElement.innerHTML = '';
   businessPosts.forEach(business => {
     const businessElement = document.createElement('div');
     businessElement.innerHTML = `
-      <img src='${business.bizImageUrl}'><div>${business.bizName}</div>
+      <!--<img src='${business.bizImageUrl}'>-->
+      <br>
+      <div>${business.bizName}</div>
+      <div>${business.distanceMiles.toFixed(2)} miles away</div>
     `;
     business.posts.forEach(post => {
       const postElement = document.createElement('div');
@@ -30,7 +54,6 @@ async function main() {
     postsElement.appendChild(businessElement);
   });
 }
-main();
 
 instagramInputElement.addEventListener('change', async () => {
   const instagramLink = instagramInputElement.value;
