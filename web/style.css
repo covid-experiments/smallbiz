@@ -1,13 +1,12 @@
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
 #pac-input {
   text-overflow: ellipsis;
   width: 400px;
 }
 
-#body {
-  height: 100px;
-  width: 400px;
-}
-
-#url {
+.instagram {
   width: 400px;
 }

@@ -1,9 +1,10 @@
 import {addPost, getNearbyPosts} from './db';
 
-let place: google.maps.places.PlaceResult = null;
+let place: google.maps.places.PlaceResult;
+let instagramMetadata: {url: string, imageUrl: string, body: string};
 
-const bodyElement = document.getElementById('body') as HTMLTextAreaElement;
-const urlElement = document.getElementById('url') as HTMLInputElement;
+const instagramInputElement =
+    document.getElementById('instagram') as HTMLInputElement;
 const consoleElement = document.getElementById('console');
 const postsElement = document.getElementById('posts');
 
@@ -19,8 +20,9 @@ async function main() {
     business.posts.forEach(post => {
       const postElement = document.createElement('div');
       postElement.innerHTML = `
-        <div>${post.body}</div>
-        <a href="${post.url}" target=_blank>link</a>
+        <a href="${post.url}" target=_blank><img class="instagram" src="${
+          post.imageUrl}"></a></img>
+        <div class="instagram">${post.body}</div>
       `;
       businessElement.appendChild(postElement);
     });
@@ -30,19 +32,41 @@ async function main() {
 }
 main();
 
+instagramInputElement.addEventListener('change', async () => {
+  const instagramLink = instagramInputElement.value;
+
+  // tslint:disable-next-line:no-any
+  const instagramMetadataResponse: any =
+      await (await fetch(`${instagramLink}?__a=1`)).json();
+  instagramMetadata = {
+    url: instagramLink,
+    imageUrl: instagramMetadataResponse.graphql.shortcode_media.display_url,
+    body:
+        instagramMetadataResponse.graphql.shortcode_media.edge_media_to_caption
+            .edges[0]
+            .node.text,
+  };
+  showInstagramMetadata();
+});
+
+function showInstagramMetadata() {
+  const instagramImg =
+      document.getElementById('instagram-img') as HTMLImageElement;
+  instagramImg.src = instagramMetadata.imageUrl;
+  instagramImg.width = 400;
+
+  const instagramDescription = document.getElementById('instagram-description');
+  instagramDescription.innerText = instagramMetadata.body;
+}
+
 document.getElementById('add').addEventListener('click', async () => {
   if (place == null) {
     alert('place is required');
     return;
   }
-  const body = bodyElement.value;
-  if (body.trim() === '') {
-    alert('body is required');
-    return;
-  }
-  const url = urlElement.value;
-  if (url.trim() === '') {
-    alert('url is required');
+
+  if (instagramMetadata == null) {
+    alert('insta post is required, please wait for request to finish');
     return;
   }
 
@@ -57,7 +81,11 @@ document.getElementById('add').addEventListener('click', async () => {
           longitude: place.geometry.location.lng()
         }
       },
-      {body, imageUrl: 'https://google.com/fakeimage', url});
+      {
+        body: instagramMetadata.body,
+        imageUrl: instagramMetadata.imageUrl,
+        url: instagramMetadata.url
+      });
   consoleElement.innerText = 'done, refresh';
 });
 
