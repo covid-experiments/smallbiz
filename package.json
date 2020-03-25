@@ -22,6 +22,7 @@
     "clang-format": "~1.4.0",
     "cross-env": "^5.1.6",
     "firebase-tools": "~7.15.1",
+    "geolib": "~3.2.1",
     "ngeohash": "~0.6.3",
     "parcel-bundler": "~1.12.4",
     "tslint": "~6.1.0",

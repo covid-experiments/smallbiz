@@ -1,23 +1,36 @@
 import 'firebase/firestore';
-
 import * as firebase from 'firebase/app';
+import * as geolib from 'geolib';
 import geohash from 'ngeohash';
 
 const COLLECTION_NAME = 'smallbiz-posts';
-const MILES_RANGE = 3;
+const MILES_RANGE = 10;
+const RESULT_LIMIT = 100;
 
-// Interfaces to the API for reading/writing.
-export interface Business {
+const FEET_IN_A_METER = 3.28084;
+const FEET_IN_A_MILE = 5280;
+
+// Interfaces to the API for writing.
+export interface WriteBusiness {
   bizName: string;
   bizUrl: string;
   bizImageUrl: string;
   geoLocation: {latitude: number, longitude: number};
 }
-
-export interface Post {
+export interface WritePost {
   body: string;
   imageUrl: string;
   url: string;
+}
+
+// Interface returned by the API.
+export interface ReadBusiness {
+  bizName: string;
+  bizUrl: string;
+  bizImageUrl: string;
+  distanceMiles: number;
+  // This interface is the same when reading side.
+  posts: DatabasePost[];
 }
 
 // The interface that the database sees.
@@ -44,22 +57,38 @@ firebase.initializeApp({
 });
 
 export async function getNearbyPosts(
-    location: {latitude: number, longitude: number}) {
+    location: {latitude: number, longitude: number}): Promise<ReadBusiness[]> {
   const db = firebase.firestore();
 
   const geoHashRange =
       getGeoHashRange(location.latitude, location.longitude, MILES_RANGE);
 
-  return new Promise<DatabaseBusinessPosts[]>((resolve, reject) => {
+  return new Promise<ReadBusiness[]>((resolve, reject) => {
     db.collection(COLLECTION_NAME)
         .where('geohash', '>=', geoHashRange.lowerGeoHash)
         .where('geohash', '<=', geoHashRange.upperGeoHash)
+        .limit(RESULT_LIMIT)
         .onSnapshot(snapshot => {
-          const results: DatabaseBusinessPosts[] = [];
+          let readBusinesses: ReadBusiness[] = [];
           snapshot.forEach(snap => {
-            results.push(snap.data() as DatabaseBusinessPosts);
+            const dbBusinessPost = snap.data() as DatabaseBusinessPosts;
+            const distanceMeters = geolib.getDistance(location, {
+              latitude: dbBusinessPost.latLong.latitude,
+              longitude: dbBusinessPost.latLong.longitude
+            });
+            const distanceMiles =
+                (distanceMeters * FEET_IN_A_METER) / FEET_IN_A_MILE;
+            readBusinesses.push({
+              bizName: dbBusinessPost.bizName,
+              bizUrl: dbBusinessPost.bizUrl,
+              bizImageUrl: dbBusinessPost.bizImageUrl,
+              distanceMiles,
+              posts: dbBusinessPost.posts
+            });
           });
-          resolve(results);
+          readBusinesses = readBusinesses.sort(
+              (a, b) => (a.distanceMiles > b.distanceMiles ? 1 : -1));
+          resolve(readBusinesses);
         });
   });
 }
@@ -82,19 +111,19 @@ function getGeoHashRange(
   return {lowerGeoHash, upperGeoHash};
 }
 
-export async function addPost(business: Business, post: Post) {
+export async function addPost(business: WriteBusiness, post: WritePost) {
   const db = firebase.firestore();
 
   const {dbBusinessPosts, dbPost} = transformForDatabase(business, post);
-  // Dont do anything with this yet, it's embedded in the business post. In the
-  // future we can use this for an update.
+  // Dont do anything with this yet, it's embedded in the business post. In
+  // the future we can use this for an update.
   // tslint:disable-next-line:no-unused-expression
   [dbPost];
 
   await db.collection(COLLECTION_NAME).add(dbBusinessPosts);
 }
 
-function transformForDatabase(business: Business, post: Post):
+function transformForDatabase(business: WriteBusiness, post: WritePost):
     {dbBusinessPosts: DatabaseBusinessPosts, dbPost: DatabasePost} {
   const dbPost: DatabasePost = {
     body: post.body,
